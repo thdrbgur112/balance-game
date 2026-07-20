@@ -227,29 +227,56 @@
     position: relative;
     z-index: 1;
     text-align: center;
+    border-radius: 20px;
+    overflow: hidden;
+    min-height: 360px;
+    padding: 40px 22px 30px;
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
   }
 
   #result-screen.show {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     animation: enterAnim .4s cubic-bezier(.2,.8,.2,1);
+  }
+
+  #result-screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,13,22,0.2) 0%, rgba(8,10,18,0.55) 55%, rgba(6,8,14,0.9) 100%);
+    z-index: 0;
+  }
+
+  .result-emoji,
+  .result-heading,
+  .result-penalty,
+  #result-screen .retry-btn {
+    position: relative;
+    z-index: 1;
   }
 
   .result-emoji {
     font-size: 52px;
     margin-bottom: 6px;
-    filter: drop-shadow(0 0 14px var(--rose-glow));
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
   }
 
   .result-heading {
     font-size: 15px;
     font-weight: 700;
-    color: var(--text-dim);
+    color: rgba(255,255,255,0.75);
     letter-spacing: 0.04em;
     margin-bottom: 10px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
   }
 
   .result-penalty {
-    font-size: clamp(20px, 6vw, 25px);
+    font-size: clamp(24px, 7vw, 30px);
     font-weight: 800;
     line-height: 1.5;
     background: linear-gradient(135deg, #fff, var(--rose-soft));
@@ -258,6 +285,11 @@
     color: transparent;
     margin: 10px 0 28px;
     padding: 0 4px;
+    filter: drop-shadow(0 4px 18px rgba(0,0,0,0.55));
+  }
+
+  #result-screen .retry-btn {
+    width: 100%;
   }
 
   .retry-btn {
@@ -320,8 +352,8 @@
 
     <!-- 결과 화면 -->
     <div id="result-screen">
-      <div class="result-emoji">🍻</div>
-      <div class="result-heading">끝입니다</div>
+      <div class="result-emoji">🥂</div>
+      <div class="result-heading">오늘의 결론은</div>
       <div class="result-penalty" id="penalty-text"></div>
       <button class="retry-btn" onclick="restartGame()">🔄 다시 하기</button>
     </div>
@@ -429,16 +461,47 @@
       title: "최악의 이별은? (경험담 아님)",
       a: "잠수이별",
       b: "환승이별"
+    },
+    {
+      title: "썸탈 때 연락 스타일은",
+      a: "톡 답장 칼답인 썸",
+      b: "읽씹 3시간하고 오는 썸"
+    },
+    {
+      title: "먼저 대시는 누가",
+      a: "내가 먼저 확 들이대기",
+      b: "상대가 대시해주길 기다리기"
+    },
+    {
+      title: "썸 타는 거 티내는 정도",
+      a: "친구들한테 자랑하고 다니기",
+      b: "우리 둘만 아는 비밀로 하기"
+    },
+    {
+      title: "썸남/썸녀가 다른 사람이랑 놀러갔다는데",
+      a: "쿨하게 넘기기",
+      b: "괜히 신경쓰여서 캐묻기"
+    },
+    {
+      title: "고백은 언제",
+      a: "만난 지 일주일만에 초고속 고백",
+      b: "6개월 밀당 끝에 고백"
+    },
+    {
+      title: "썸 타다 연락 뜸해지면",
+      a: "먼저 연락해서 확인하기",
+      b: "자존심 지키고 기다리기"
     }
-    
-   
-   
+
+
   ];
 
   // 결과 화면에서 랜덤으로 뽑을 벌칙 목록 (자유롭게 추가/수정 가능)
   const penalties = [
-    "막짠 ^^"
+    "한잔 더 하시죠"
   ];
+
+  const RESULT_BG_IMAGE = "assets/cheers.jpg";
 
   let currentIndex = 0;
   const total = questions.length;
@@ -495,6 +558,7 @@
     questionScreen.style.display = 'none';
     const pick = penalties[Math.floor(Math.random() * penalties.length)];
     penaltyText.textContent = pick;
+    resultScreen.style.backgroundImage = `url('${RESULT_BG_IMAGE}')`;
     resultScreen.classList.add('show');
     vibrate([10, 40, 10]);
   }
